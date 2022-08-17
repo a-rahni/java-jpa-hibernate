@@ -4,6 +4,7 @@ package fr.m2i.javajpahibernate;
 import fr.m2i.javajpahibernate.dao.RoleDAO;
 import fr.m2i.javajpahibernate.helper.SessionHelper;
 import fr.m2i.javajpahibernate.model.Role;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -19,7 +20,13 @@ public class JavaJpaHibernate {
       
         EntityManager entityManager = SessionHelper.getEntityManager();
         RoleDAO roleDao = new RoleDAO();
-
+        
+        // find all
+        List<Role> listRoles= roleDao.findAll();
+        for(Role r:listRoles){
+            System.out.println(r);
+        }
+/*
         // create
         Role roleAdmin = new Role("ADMIN", "Le rôle Administrateur"); 
         roleDao.create(roleAdmin);
@@ -37,7 +44,7 @@ public class JavaJpaHibernate {
         // find
         Role updated = roleDao.findById(1L);
         System.out.println("Role UPDATED : " + updated);
-
+*/
         entityManager.close();
     }
 }

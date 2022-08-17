@@ -3,8 +3,11 @@ package fr.m2i.javajpahibernate.dao;
 
 import fr.m2i.javajpahibernate.helper.SessionHelper;
 import fr.m2i.javajpahibernate.model.Role;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 
 /**
  *
@@ -98,4 +101,14 @@ public class RoleDAO {
             }
         }
     }
+    
+    //delete to DO
+ 
+    
+    public List<Role> findAll() {
+        Query findAllQuery = entityManager.createQuery("select r from Role r");
+        return findAllQuery.getResultList();
+    }
+        
+    
 }
