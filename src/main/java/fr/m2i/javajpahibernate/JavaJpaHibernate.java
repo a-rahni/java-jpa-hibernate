@@ -1,6 +1,7 @@
 
 package fr.m2i.javajpahibernate;
 
+import fr.m2i.javajpahibernate.helper.SessionHelper;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -13,8 +14,10 @@ public class JavaJpaHibernate {
 
     public static void main(String[] args) {
       
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("site_commerce_pu");
-        EntityManager entityManager = emf.createEntityManager();
-        System.out.println("Hello World!");
+        EntityManager entityManager = SessionHelper.getEntityManager();
+        
+        System.out.println("Nos traitement ...");
+        
+        entityManager.close(); // en fonction de la durée de vie, liberer la memoire et fermer la connexion a la DB
     }
 }
