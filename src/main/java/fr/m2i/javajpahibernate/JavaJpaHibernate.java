@@ -18,6 +18,6 @@ public class JavaJpaHibernate {
         
         System.out.println("Nos traitement ...");
         
-        entityManager.close(); // en fonction de la durée de vie, liberer la memoire et fermer la connexion a la DB
+        entityManager.close(); // a utiliser en fonction de la durée de vie, liberer la memoire et fermer la connexion a la DB
     }
 }

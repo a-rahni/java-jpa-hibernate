@@ -4,6 +4,7 @@
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
              version="2.2">
     <persistence-unit name="site_commerce_pu">
+        <class>package fr.m2i.javajpahibernate.model.Role</class> <!-- pas obligatoire -->
         <properties>
             <!-- database connection -->
             <property name="hibernate.connection.driver_class" value="com.mysql.cj.jdbc.Driver" />
@@ -11,7 +12,7 @@
             <property name="hibernate.connection.user" value="commerce" />
             <property name="hibernate.connection.password" value="commerce" />
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL57Dialect" />
-            <property name="hibernate.hbm2ddl.auto" value="update" />
+            <property name="hibernate.hbm2ddl.auto" value="update" /> <!-- create: recreer les colonnes a chaque demarrage même d"ja existants-->
             <property name="hibernate.show_sql" value="true" />
         </properties>
     </persistence-unit>
