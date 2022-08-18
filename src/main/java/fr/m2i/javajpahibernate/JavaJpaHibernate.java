@@ -20,13 +20,13 @@ public class JavaJpaHibernate {
       
         EntityManager entityManager = SessionHelper.getEntityManager();
         RoleDAO roleDao = new RoleDAO();
-        
+               
         // find all
         List<Role> listRoles= roleDao.findAll();
         for(Role r:listRoles){
             System.out.println(r);
         }
-/*
+       
         // create
         Role roleAdmin = new Role("ADMIN", "Le rôle Administrateur"); 
         roleDao.create(roleAdmin);
@@ -44,7 +44,16 @@ public class JavaJpaHibernate {
         // find
         Role updated = roleDao.findById(1L);
         System.out.println("Role UPDATED : " + updated);
-*/
+
+        // test requets JPQL avec parametres  
+        System.out.println("********************* description contenant admin et identification = ADMIN");
+        //listRoles= roleDao.findByDescription("admin", "ADMIN");
+        listRoles= roleDao.findByDescriptionV2("admin", "ADMIN");
+        for(Role r:listRoles){
+            System.out.println(r);
+        }
+        
+        
         entityManager.close();
     }
 }
