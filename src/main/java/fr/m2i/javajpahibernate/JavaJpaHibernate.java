@@ -1,9 +1,11 @@
 
 package fr.m2i.javajpahibernate;
 
+import fr.m2i.javajpahibernate.dao.AdresseDAO;
 import fr.m2i.javajpahibernate.dao.RoleDAO;
 import fr.m2i.javajpahibernate.dao.UtilisateurDAO;
 import fr.m2i.javajpahibernate.helper.SessionHelper;
+import fr.m2i.javajpahibernate.model.Adresse;
 import fr.m2i.javajpahibernate.model.Role;
 import fr.m2i.javajpahibernate.model.Utilisateur;
 import java.text.ParseException;
@@ -92,6 +94,58 @@ public class JavaJpaHibernate {
         Utilisateur foundedUser = userDao.findById(2L);
         System.out.println("User updated : " + foundedUser);
 
+ 
+ /*********** adresses ***************************************/
+ 
+        AdresseDAO adresseDao = new AdresseDAO();
+ 
+      // create
+        user = new Utilisateur();
+        user.setIdUtilisateur(1L);
+
+        Adresse adresse1 = new Adresse(user, "86000", "France", true, "route de paris", "Poitiers");
+        Adresse adresse2 = new Adresse(user, "37000", "France", false, "route de paris", "Tours");
+        
+        
+
+        adresseDao.create(adresse1);
+        adresseDao.create(adresse2);
+        
+        // find all
+        List<Adresse> adresses = adresseDao.findAll();
+
+        for (Adresse a : adresses) {
+            System.out.println("Find all : " + a);
+        }
+
+        // update
+        Adresse adresseData = new Adresse();
+        adresseData.setCodePostal("86550");
+
+        
+
+        adresseDao.update(1L, adresseData);
+
+        // find
+        Adresse foundedAdresse = adresseDao.findById(1L);
+        System.out.println("Adresse updated : " + foundedAdresse);
+ 
+ 
+        //UtilisateurDAO userDao = new UtilisateurDAO();
+        Adresse adresse3 = new Adresse(null, "86000", "France", true, "route de paris", "Mignaloux");
+ 
+        // find
+        foundedUser = userDao.findById(2L);
+        System.out.println("User updated : " + foundedUser);
+        
+        foundedUser.addAddress(adresse3);
+        userDao.update(foundedUser.getIdUtilisateur(), foundedUser);
+        
+ 
+ 
+ 
+ 
+ 
 /*************************************************************/
  /*       // test requets JPQL avec parametres  
         System.out.println("********************* description contenant admin et identification = ADMIN");

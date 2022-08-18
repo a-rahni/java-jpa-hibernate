@@ -2,6 +2,8 @@
 package fr.m2i.javajpahibernate.model;
 
 import java.util.Date;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -60,6 +63,11 @@ public class Utilisateur {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date_naissance", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date dateNaissance;
+    
+    @OneToMany(mappedBy = "utilisateur", 
+            cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
+            orphanRemoval = true)
+    private List<Adresse> adresses;
 
     public Utilisateur() {
 
@@ -175,6 +183,24 @@ public class Utilisateur {
 
     public void setDateNaissance(Date dateNaissance) {
         this.dateNaissance = dateNaissance;
+    }
+    
+    public void addAddress(Adresse address){
+        if(adresses == null){
+            System.out.println(" add adresse: liste adresses est nulle");
+            return;
+        }
+        if(address == null) return;
+        adresses.add(address);
+    }
+    
+    public void removeAddress(Adresse address){
+        if(adresses == null){
+            System.out.println(" add adresse: liste adresses est nulle");
+            return;
+        }
+        if(address == null) return;
+        adresses.remove(address);
     }
 
     @Override
