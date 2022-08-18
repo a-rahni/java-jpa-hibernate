@@ -69,6 +69,9 @@ public class Role {
     
     public void copy(Role roleData) {
 
+        if(roleData == null){
+            return;
+        }
         if (roleData.getIdentifiant() != null) {
             this.setIdentifiant(roleData.getIdentifiant());
         }
