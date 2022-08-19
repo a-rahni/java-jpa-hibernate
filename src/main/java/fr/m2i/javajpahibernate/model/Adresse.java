@@ -18,38 +18,48 @@ import javax.persistence.Table;
 @Table(name="adresses")
 public class Adresse {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name = "id_adresse")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idAdresse;
-    
-    @JoinColumn(name = "id_utilisateur")  // une adresse est attachée à un seul utilisateur
-    @ManyToOne(fetch=FetchType.LAZY)
+
+    @JoinColumn(name = "id_utilisateur", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Utilisateur utilisateur;
-    
-    @Column(name="code_postal", length=100)
-    private String codePostal;
-    
-    @Column(name="pays", length=100)
-    private String pays;
-    
-    @Column(name="principle", columnDefinition="TINYINT(1)")
-    private Boolean principale;
-    
-    @Column(name="rue", length=100)
+
+    @Column(name = "rue", length = 100)
     private String rue;
-    
-    @Column(name="ville", length=100)
+
+    @Column(name = "code_postal", length = 100)
+    private String codePostal;
+
+    @Column(name = "ville", length = 100)
     private String ville;
 
-    public Adresse(Utilisateur utilisateur, String codePostal, String pays, Boolean principale, String rue, String ville) {
-        this.utilisateur = utilisateur;
-        this.codePostal = codePostal;
-        this.pays = pays;
-        this.principale = principale;
-        this.rue = rue;
-        this.ville = ville;
-    }
+    @Column(name = "pays", length = 100)
+    private String pays;
+
+    @Column(name = "principale", columnDefinition = "TINYINT(1) DEFAULT 0")
+    private Boolean principale;
 
     public Adresse() {
+
+    }
+
+    public Adresse(Utilisateur utilisateur, String rue, String codePostal, String ville, String pays, Boolean principale) {
+        this.utilisateur = utilisateur;
+        this.rue = rue;
+        this.codePostal = codePostal;
+        this.ville = ville;
+        this.pays = pays;
+        this.principale = principale;
+    }
+    
+     public Adresse( String rue, String codePostal, String ville, String pays, Boolean principale) {
+        this.rue = rue;
+        this.codePostal = codePostal;
+        this.ville = ville;
+        this.pays = pays;
+        this.principale = principale;
     }
 
     public Long getIdAdresse() {
@@ -68,12 +78,28 @@ public class Adresse {
         this.utilisateur = utilisateur;
     }
 
+    public String getRue() {
+        return rue;
+    }
+
+    public void setRue(String rue) {
+        this.rue = rue;
+    }
+
     public String getCodePostal() {
         return codePostal;
     }
 
     public void setCodePostal(String codePostal) {
         this.codePostal = codePostal;
+    }
+
+    public String getVille() {
+        return ville;
+    }
+
+    public void setVille(String ville) {
+        this.ville = ville;
     }
 
     public String getPays() {
@@ -92,60 +118,47 @@ public class Adresse {
         this.principale = principale;
     }
 
-    public String getRue() {
-        return rue;
+    public String getFullAdresse() {
+        return String.format("%s, %s, %s, %s", rue, codePostal, ville, pays);
     }
 
-    public void setRue(String rue) {
-        this.rue = rue;
-    }
-
-    public String getVille() {
-        return ville;
-    }
-
-    public void setVille(String ville) {
-        this.ville = ville;
-    }
-    
     @Override
-    public String toString(){
-        return "Adresse{" + "idAdresse=" + idAdresse
+    public String toString() {
+        return "AdresseDao{"
+                + "idAdresse=" + idAdresse
                 + ", utilisateur=" + utilisateur
-                + ", Code postal=" + codePostal
-                + ", pays=" + pays
+                + ", rue='" + rue + '\''
+                + ", codePostal=" + codePostal
+                + ", ville='" + ville + '\''
+                + ", pays='" + pays + '\''
                 + ", principale=" + principale
-                + ", rue=" + rue
-                + ", ville=" + ville+ '}';
+                + '}';
     }
-    
-     public void copy(Adresse adresseData) {
 
-        if (adresseData == null) {
+    public void copy(Adresse addressData) {
+
+        if (addressData == null) {
             return;
         }
 
-        if (adresseData.getCodePostal() != null) {
-            this.setCodePostal(adresseData.getCodePostal());
+        if (addressData.getRue() != null) {
+            this.rue = addressData.getRue();
         }
-        
-        if (adresseData.getPays() != null) {
-            this.setPays(adresseData.getPays());
-        }
-        
-        if (adresseData.getPrincipale() != null) {
-            this.setPrincipale(adresseData.getPrincipale());
-        }
-        
-        if (adresseData.getRue() != null) {
-            this.setRue(adresseData.getRue());
-        }
-        
-        if (adresseData.getVille() != null) {
-            this.setVille(adresseData.getVille());
-        }
-     }
 
-       
-    
+        if (addressData.getCodePostal() != null) {
+            this.codePostal = addressData.getCodePostal();
+        }
+
+        if (addressData.getVille() != null) {
+            this.ville = addressData.getVille();
+        }
+
+        if (addressData.getPays() != null) {
+            this.pays = addressData.getPays();
+        }
+
+        if (addressData.getPrincipale() != null) {
+            this.principale = addressData.getPrincipale();
+        }
+    }
 }

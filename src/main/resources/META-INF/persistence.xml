@@ -12,7 +12,7 @@
             <property name="hibernate.connection.user" value="commerce" />
             <property name="hibernate.connection.password" value="commerce" />
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL57Dialect" />
-            <property name="hibernate.hbm2ddl.auto" value="update" /> <!-- create: recreer les colonnes a chaque demarrage même d"ja existants-->
+            <property name="hibernate.hbm2ddl.auto" value="create" /> <!-- create: recreer les colonnes a chaque demarrage même d"ja existants-->
             <property name="hibernate.show_sql" value="true" />
         </properties>
     </persistence-unit>

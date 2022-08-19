@@ -1,6 +1,7 @@
 
 package fr.m2i.javajpahibernate.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -30,6 +31,9 @@ public class Utilisateur {
     @JoinColumn(name = "id_role", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Role role;
+
+    @OneToMany(mappedBy = "utilisateur", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Adresse> adresses;
 
     @Column(name = "civilite", length = 100)
     private String civilite;
@@ -63,11 +67,6 @@ public class Utilisateur {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date_naissance", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date dateNaissance;
-    
-    @OneToMany(mappedBy = "utilisateur", 
-            cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
-            orphanRemoval = true)
-    private List<Adresse> adresses;
 
     public Utilisateur() {
 
@@ -103,6 +102,14 @@ public class Utilisateur {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public List<Adresse> getAdresses() {
+        return adresses;
+    }
+
+    public void setAdresses(List<Adresse> adresses) {
+        this.adresses = adresses;
     }
 
     public String getCivilite() {
@@ -184,24 +191,6 @@ public class Utilisateur {
     public void setDateNaissance(Date dateNaissance) {
         this.dateNaissance = dateNaissance;
     }
-    
-    public void addAddress(Adresse address){
-        if(adresses == null){
-            System.out.println(" add adresse: liste adresses est nulle");
-            return;
-        }
-        if(address == null) return;
-        adresses.add(address);
-    }
-    
-    public void removeAddress(Adresse address){
-        if(adresses == null){
-            System.out.println(" add adresse: liste adresses est nulle");
-            return;
-        }
-        if(address == null) return;
-        adresses.remove(address);
-    }
 
     @Override
     public String toString() {
@@ -217,6 +206,26 @@ public class Utilisateur {
                 + ", dateCreation=" + dateCreation
                 + ", dateModification=" + dateModification
                 + ", dateNaissance=" + dateNaissance + '}';
+    }
+
+    public void addAddress(Adresse address) {
+        
+        if (adresses == null) {
+            adresses = new ArrayList<>();
+        }
+
+        adresses.add(address);
+        address.setUtilisateur(this);
+        
+    }
+
+    public void removeAddress(Adresse address) {
+         address.setUtilisateur(null);
+
+        if (adresses != null) {
+            adresses.remove(address);
+        }
+        
     }
 
     public void copy(Utilisateur userData) {
@@ -266,7 +275,6 @@ public class Utilisateur {
         }
     }
 }
-
 
 
 
