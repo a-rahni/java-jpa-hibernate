@@ -2,10 +2,12 @@
 package fr.m2i.javajpahibernate;
 
 import fr.m2i.javajpahibernate.dao.AdresseDAO;
+import fr.m2i.javajpahibernate.dao.ProduitDAO;
 import fr.m2i.javajpahibernate.dao.RoleDAO;
 import fr.m2i.javajpahibernate.dao.UtilisateurDAO;
 import fr.m2i.javajpahibernate.helper.SessionHelper;
 import fr.m2i.javajpahibernate.model.Adresse;
+import fr.m2i.javajpahibernate.model.Produit;
 import fr.m2i.javajpahibernate.model.Role;
 import fr.m2i.javajpahibernate.model.Utilisateur;
 import java.text.ParseException;
@@ -28,7 +30,7 @@ public class JavaJpaHibernate {
         EntityManager entityManager = SessionHelper.getEntityManager();
 
         /*********** ROLE **********/
-        RoleDAO roleDao = new RoleDAO();
+/*        RoleDAO roleDao = new RoleDAO();
         
         // create
         Role role = new Role("USER", "Le rôle User"); 
@@ -56,7 +58,7 @@ public class JavaJpaHibernate {
 //        System.out.println("Role UPDATED : " + updated);
 
 
-        /*********** USER **********/
+        //*********** USER **********
         
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         UtilisateurDAO userDao = new UtilisateurDAO();
@@ -106,7 +108,7 @@ public class JavaJpaHibernate {
         secondUser.removeAddress(secondUser.getAdresses().get(secondUser.getAdresses().size() - 1));
         userDao.update(2L, secondUser);
 
-        /*********** ADDRESS **********/
+        //*********** ADDRESS **********
 
 //        AdresseDAO adresseDao = new AdresseDAO();
 //        
@@ -144,7 +146,32 @@ public class JavaJpaHibernate {
 //        // find
 //        System.out.println("First address : " + adresseDao.findById(1L).getFullAdresse());
   
- 
+ */
+
+     //**************** Produit **************************
+     ProduitDAO produitDao = new ProduitDAO();
+     List<Produit> produitResult = produitDao.findByNom("Iphone 4");
+        
+        for (Produit p : produitResult) {
+            System.out.println("result produits: " + p);
+        }
+     
+        System.out.println("****  findByMostQuantity: " );
+        
+        produitResult = produitDao.findByMostQuantity();
+        
+        for (Produit p : produitResult) {
+            System.out.println("result produits: " + p);
+        }
+        
+        System.out.println("****  delete produit: " );
+        
+        Produit produit = produitDao.findById(13L);
+        produitDao.delete(produit);
+        
+        
+     
+     
 /*************************************************************/
  /*       // test requets JPQL avec parametres  
         System.out.println("********************* description contenant admin et identification = ADMIN");
