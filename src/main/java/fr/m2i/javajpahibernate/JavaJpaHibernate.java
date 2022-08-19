@@ -30,11 +30,11 @@ public class JavaJpaHibernate {
         EntityManager entityManager = SessionHelper.getEntityManager();
 
         /*********** ROLE **********/
-/*        RoleDAO roleDao = new RoleDAO();
+        RoleDAO roleDao = new RoleDAO();
         
         // create
-        Role role = new Role("USER", "Le rôle User"); 
-        roleDao.create(role);
+//        Role role = new Role("USER", "Le rôle User"); 
+//        roleDao.create(role);
 
         // find all
 //        List<Role> roles = roleDao.findAll();
@@ -58,27 +58,27 @@ public class JavaJpaHibernate {
 //        System.out.println("Role UPDATED : " + updated);
 
 
-        //*********** USER **********
+        /*********** USER **********/
         
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        UtilisateurDAO userDao = new UtilisateurDAO();
-
-        // create
-        role.setIdRole(1L);
-
-        Utilisateur user = new Utilisateur(role, "Madame", "Mme x", "x", "x_x", "password", true, false, new Date(), new Date(), new Date());
-        Utilisateur user2 = new Utilisateur(role, "Monsieur", "Mr x", "x", "x_x", "password", true, false, new Date(), new Date(), new Date());
-
-        Adresse address1 = new Adresse("21 avenue gabriel peri", "76600", "Le Havre", "France", false);
-        Adresse address2 = new Adresse("1 rue de la paix", "75001", "Paris", "France", true);
-        Adresse address3 = new Adresse("10 rue de l'insurection", "75000", "Paris", "France", false);
-
-        user.addAddress(address1);
-        user2.addAddress(address2);
-        user2.addAddress(address3);
-        
-        userDao.create(user);
-        userDao.create(user2);
+//        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+//        UtilisateurDAO userDao = new UtilisateurDAO();
+//
+//        // create
+//        role.setIdRole(1L);
+//
+//        Utilisateur user = new Utilisateur(role, "Madame", "Mme x", "x", "x_x", "password", true, false, new Date(), new Date(), new Date());
+//        Utilisateur user2 = new Utilisateur(role, "Monsieur", "Mr x", "x", "x_x", "password", true, false, new Date(), new Date(), new Date());
+//
+//        Adresse address1 = new Adresse("21 avenue gabriel peri", "76600", "Le Havre", "France", false);
+//        Adresse address2 = new Adresse("1 rue de la paix", "75001", "Paris", "France", true);
+//        Adresse address3 = new Adresse("10 rue de l'insurection", "75000", "Paris", "France", false);
+//
+//        user.addAddress(address1);
+//        user2.addAddress(address2);
+//        user2.addAddress(address3);
+//        
+//        userDao.create(user);
+//        userDao.create(user2);
 
         // find all
 //        List<Utilisateur> users = userDao.findAll();
@@ -101,14 +101,14 @@ public class JavaJpaHibernate {
 //        userDao.update(2L, userData);
 
         // find
-        Utilisateur secondUser = userDao.findById(2L);
-        System.out.println("User updated : " + secondUser);
+//        Utilisateur secondUser = userDao.findById(2L);
+//        System.out.println("User updated : " + secondUser);
 
         // update user address
-        secondUser.removeAddress(secondUser.getAdresses().get(secondUser.getAdresses().size() - 1));
-        userDao.update(2L, secondUser);
+//        secondUser.removeAddress(secondUser.getAdresses().get(secondUser.getAdresses().size() - 1));
+//        userDao.update(2L, secondUser);
 
-        //*********** ADDRESS **********
+        /*********** ADDRESS **********/
 
 //        AdresseDAO adresseDao = new AdresseDAO();
 //        
@@ -145,29 +145,69 @@ public class JavaJpaHibernate {
 //
 //        // find
 //        System.out.println("First address : " + adresseDao.findById(1L).getFullAdresse());
-  
- */
 
-     //**************** Produit **************************
-     ProduitDAO produitDao = new ProduitDAO();
-     List<Produit> produitResult = produitDao.findByNom("Iphone 4");
-        
-        for (Produit p : produitResult) {
-            System.out.println("result produits: " + p);
+        /*********** PRODUCT **********/
+
+        ProduitDAO productDao = new ProduitDAO();
+
+        // find all
+        List<Produit> products = productDao.findAll();
+
+        for (Produit p : products) {
+            System.out.println(String.format("All products| id: %d - nom: %s ", p.getIdProduit(), p.getNom()));
         }
-     
-        System.out.println("****  findByMostQuantity: " );
-        
-        produitResult = produitDao.findByMostQuantity();
-        
-        for (Produit p : produitResult) {
-            System.out.println("result produits: " + p);
+
+        // create
+        Produit productCreate = new Produit("REF-N-3310", 500f, "Nokia 3310", "Meilleur téléphone", 1, true);
+        productDao.create(productCreate);
+
+        // update
+        Produit toUpdate = new Produit();
+        toUpdate.setStock(0);
+
+        productDao.update(15L, toUpdate);
+
+        // find by id
+        Produit n3310 = productDao.findById(15L);
+        System.out.println(String.format("Le 3310| id: %d - nom: %s - stock: %d", n3310.getIdProduit(), n3310.getNom(), n3310.getStock()));
+
+        // find by nom
+        List<Produit> productsByName = productDao.findByNom("Iphone 3GS");
+
+        for (Produit p : productsByName) {
+            System.out.println(String.format("products by name| id: %d - nom: %s ", p.getIdProduit(), p.getNom()));
         }
-        
-        System.out.println("****  delete produit: " );
-        
-        Produit produit = produitDao.findById(13L);
-        produitDao.delete(produit);
+
+        // find by description
+        List<Produit> productsByDescription = productDao.findByDescription("un Iphone 4 très pratique");
+
+        for (Produit p : productsByDescription) {
+            System.out.println(String.format("products by description| id: %d - nom: %s ", p.getIdProduit(), p.getNom()));
+        }
+
+        // find by prix
+        List<Produit> productsByPrice = productDao.findByPrix(300f);
+
+        for (Produit p : productsByPrice) {
+            System.out.println(String.format("products by price| id: %d - nom: %s ", p.getIdProduit(), p.getNom()));
+        }
+
+        // find by reference
+        List<Produit> productsByRef = productDao.findByReference("REF-NOKIA-LUMIA");
+
+        for (Produit p : productsByRef) {
+            System.out.println(String.format("products by ref| id: %d - nom: %s ", p.getIdProduit(), p.getNom()));
+        }
+
+        // find by most quantity
+        Produit productByQtt = productDao.findByMostQuantity();
+        System.out.println(String.format("Le produit avec le plus de stock| id: %d - nom: %s ", productByQtt.getIdProduit(), productByQtt.getNom()));
+
+        // delete
+        Produit toDelete = new Produit();
+        toDelete.setIdProduit(15L);
+
+        productDao.delete(toDelete);
         
         
      

@@ -4,38 +4,95 @@ package fr.m2i.javajpahibernate.dao;
 import fr.m2i.javajpahibernate.helper.SessionHelper;
 import fr.m2i.javajpahibernate.model.Produit;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 
-/**
- *
- * @author rahni
- */
 public class ProduitDAO {
-    
-    EntityManager entityManager = SessionHelper.getEntityManager();
-    
-    public List<Produit> findAll(){
-        Query query = entityManager.createQuery("SELECT p FROM Produit p");
-        return query.getResultList();
+
+    private final EntityManager entityManager;
+
+    public ProduitDAO() {
+        this.entityManager = SessionHelper.getEntityManager();
     }
-    
-    public Produit findById(Long id){
+
+    public List<Produit> findAll() {
+        Query findAllQuery = entityManager.createQuery("select p from Produit p");
+        return findAllQuery.getResultList();
+    }
+
+    public Produit findById(Long id) {
         Produit founded = entityManager.find(Produit.class, id);
-        
-        if(founded == null){
-             System.out.println("Attention le adresse avec l'id: " + id + " n'existe pas !");
+
+        if (founded == null) {
+            System.out.println("Attention le produit avec l'id: " + id + " n'existe pas !");
         }
-        
+
         return founded;
     }
-    
-    public void create(Produit produitToCreate){
-    
-        if (produitToCreate == null) {
-            System.out.println("L'objet adresse ne peut pas être null");
+
+    public List<Produit> findByNom(String nom) {
+        
+        if (nom == null) {
+            System.out.println("Le nom du produit n'est pas valide !");
+            return null;
+        }
+
+        Query query = entityManager.createQuery("select p from Produit p where p.nom = ?1");
+        query.setParameter(1, nom);
+
+        return query.getResultList();
+    }
+
+    public List<Produit> findByDescription(String description) {
+
+        if (description == null) {
+            System.out.println("Le description du produit n'est pas valide !");
+            return null;
+        }
+
+        Query query = entityManager.createQuery("select p from Produit p where p.description = :description");
+        query.setParameter("description", description);
+
+        return query.getResultList();
+    }
+
+    public List<Produit> findByPrix(Float prix) {
+
+        if (prix == null) {
+            System.out.println("Le prix du produit n'est pas valide !");
+            return null;
+        }
+
+        Query query = entityManager.createQuery("select p from Produit p where p.prix = ?1");
+        query.setParameter(1, prix);
+
+        return query.getResultList();
+    }
+
+    public List<Produit> findByReference(String reference) {
+
+        if (reference == null) {
+            System.out.println("Le reference du produit n'est pas valide !");
+            return null;
+        }
+
+        Query query = entityManager.createQuery("select p from Produit p where p.reference = :reference");
+        query.setParameter("reference", reference);
+
+        return query.getResultList();
+    }
+
+    public Produit findByMostQuantity() {
+
+        TypedQuery<Produit> query = entityManager
+                .createQuery("select p from Produit p where p.stock = (select max(pp.stock) from Produit pp)", Produit.class);
+
+        return query.getSingleResult();
+    }
+
+    public void create(Produit productToCreate) {
+
+        if (productToCreate == null) {
+            System.out.println("L'objet produit ne peut pas être null");
             return;
         }
 
@@ -45,29 +102,28 @@ public class ProduitDAO {
             tx = entityManager.getTransaction();
             tx.begin();
 
-            entityManager.persist(produitToCreate);
+            entityManager.persist(productToCreate);
 
             tx.commit();
         } catch (Exception e) {
             System.out.println("Une erreur est survenu lors de la création");
             System.out.println("Exception message : " + e.getMessage());
             if (tx != null) {
-                // Une erreur est survenue, on discard les actions entamés dans la transaction
                 tx.rollback();
             }
         }
     }
-    
-    public void update(Long id, Produit produitData) {
 
-        Produit produitToUpdate = entityManager.find(Produit.class, id);
+    public void update(Long id, Produit productData) {
 
-        if (produitToUpdate == null) {
+        Produit productToUpdate = findById(id);
+
+        if (productToUpdate == null) {
             System.out.println("Le produit avec l'id:" + id + " n'existe pas");
             return;
         }
 
-        //produitToUpdate.copy(produitData); to do
+        productToUpdate.copy(productData);
 
         EntityTransaction tx = null;
 
@@ -75,7 +131,7 @@ public class ProduitDAO {
             tx = entityManager.getTransaction();
             tx.begin();
 
-            entityManager.merge(produitToUpdate);
+            entityManager.merge(productToUpdate);
 
             tx.commit();
         } catch (Exception e) {
@@ -87,20 +143,14 @@ public class ProduitDAO {
         }
     }
     
-    // public void delete .. to do
-    public void delete(Produit produit) {
-        if((produit == null) || (produit.getIdProduit() ==null))
-        {
-            return;
-        }
-
+    public void delete(Produit product) {
         
-        Produit produitTodelete = entityManager.find(Produit.class, produit.getIdProduit());
-
-        if (produitTodelete == null) {
-            System.out.println("Le produit avec l'id:" + produit.getIdProduit() + " n'existe pas");
+        if (product == null || product.getIdProduit() == null || product.getIdProduit() < 1L) {
+            System.out.println("Le produit n'est pas valide !");
             return;
         }
+        
+        Produit productToDelete = findById(product.getIdProduit());
 
         EntityTransaction tx = null;
 
@@ -108,7 +158,7 @@ public class ProduitDAO {
             tx = entityManager.getTransaction();
             tx.begin();
 
-            entityManager.remove(produitTodelete);
+            entityManager.remove(productToDelete);
 
             tx.commit();
         } catch (Exception e) {
@@ -118,35 +168,7 @@ public class ProduitDAO {
                 tx.rollback();
             }
         }
-    }
-    
-    
-    
-    
-   public List<Produit> findByNom(String name){
-       Query query=entityManager.createQuery("SELECT p FROM Produit p where p.nom like :nom"); 
-       query.setParameter("nom", name);          
-       return query.getResultList();
-   }
-   
-    public List<Produit> finByDescription(String desciption){
-       Query query=entityManager.createQuery("SELECT p FROM Produit p where p.description like :desc"); 
-       query.setParameter("desc", desciption);          
-       return query.getResultList();
-   }
-    
-     public List<Produit> findByPrix(Float prix){
-       Query query=entityManager.createQuery("SELECT p FROM Produit p where p.prix like :price"); 
-       query.setParameter("price", prix);          
-       return query.getResultList();
-   }
-     
-     public List<Produit> findByMostQuantity(){
-         
         
-       Query query=entityManager.createQuery("SELECT p FROM Produit p where p.stock = ( SELECT MAX(p1.stock) FROM Produit p1)");
-       return query.getResultList();
-      
-   }
-    
+    }
+
 }
